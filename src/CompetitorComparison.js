@@ -76,7 +76,7 @@ const CompetitorComparison = () => {
       <p>Enter competitor channel names (comma-separated):</p>
       <input
         type="text"
-        placeholder="e.g. MrBeast, Linus Tech Tips"
+        placeholder="e.g. MrBeast, T-Series"
         value={input}
         onChange={(e) => setInput(e.target.value)}
         style={{
@@ -106,16 +106,15 @@ const CompetitorComparison = () => {
 
       {data.length > 0 && (
         <div style={{ marginTop: '30px' }}>
-          <defs>
-            <linearGradient id="redGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#ff4d4d" />
-              <stop offset="100%" stopColor="#990000" />
-            </linearGradient>
-          </defs>
-
           <h3>Subscribers</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data}>
+              <defs>
+                <linearGradient id="redGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#ff4d4d" />
+                  <stop offset="100%" stopColor="#990000" />
+                </linearGradient>
+              </defs>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" stroke="#000" />
               <YAxis stroke="#000" tickFormatter={formatMillions} />
@@ -127,22 +126,34 @@ const CompetitorComparison = () => {
           <h3>Average Views per Video</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data}>
+              <defs>
+                <linearGradient id="redGradient2" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#ff4d4d" />
+                  <stop offset="100%" stopColor="#990000" />
+                </linearGradient>
+              </defs>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" stroke="#000" />
               <YAxis stroke="#000" tickFormatter={formatMillions} />
               <Tooltip formatter={(value) => formatMillions(value)} />
-              <Bar dataKey="avgViews" fill="url(#redGradient)" />
+              <Bar dataKey="avgViews" fill="url(#redGradient2)" />
             </BarChart>
           </ResponsiveContainer>
 
           <h3>Average Engagement Rate (%)</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data}>
+              <defs>
+                <linearGradient id="redGradient3" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#ff4d4d" />
+                  <stop offset="100%" stopColor="#990000" />
+                </linearGradient>
+              </defs>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" stroke="#000" />
               <YAxis stroke="#000" />
               <Tooltip formatter={(value) => value + '%'} />
-              <Bar dataKey="engagementRate" fill="url(#redGradient)" />
+              <Bar dataKey="engagementRate" fill="url(#redGradient3)" />
             </BarChart>
           </ResponsiveContainer>
         </div>
