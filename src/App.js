@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import LikesTrendChart from './LikesTrendChart';
-import VideoViewsChart from './VideoViewsChart';
 import ChartsDashboard from './ChartsDashboard';
 import CompetitorComparison from './CompetitorComparison';
 import './App.css';
@@ -21,10 +19,14 @@ function App() {
     setVideos([]);
 
     try {
-      const res = await axios.get(`https://youtube-analytics-backend.onrender.com/channel?name=${channelName}`);
+      const res = await axios.get('https://youtube-analytics-bcknd.onrender.com/channel', {
+        params: { name: channelName }
+      });
+
       setChannelData(res.data.channel);
       setVideos(res.data.videos);
     } catch (err) {
+      console.error('Error fetching channel data:', err);
       setError('Channel not found or failed to load.');
     } finally {
       setLoading(false);
@@ -41,11 +43,26 @@ function App() {
           placeholder="Enter channel name..."
           value={channelName}
           onChange={(e) => setChannelName(e.target.value)}
-          style={{ padding: '10px', width: '60%', marginRight: '10px' }}
+          style={{
+            padding: '10px',
+            width: '60%',
+            fontSize: '16px',
+            marginRight: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '4px'
+          }}
         />
         <button
           onClick={fetchChannelData}
-          style={{ padding: '10px 20px', backgroundColor: '#FF0000', color: 'white', border: 'none', borderRadius: '6px' }}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#FF0000',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            fontSize: '16px',
+            cursor: 'pointer'
+          }}
         >
           Analyze
         </button>

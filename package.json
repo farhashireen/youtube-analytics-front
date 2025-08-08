@@ -2,7 +2,7 @@
   "name": "youtube-analytics-frontend",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://farhashireen.github.io/youtube-analytics",
+  "homepage": "https://farhashireen.github.io/youtube-analytics-frontend",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
