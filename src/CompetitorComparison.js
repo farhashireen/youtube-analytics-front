@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
 } from 'recharts';
 
 const CompetitorComparison = () => {
@@ -21,17 +26,28 @@ const CompetitorComparison = () => {
 
     for (let name of names) {
       try {
-        const res = await axios.get(`http://localhost:3001/channel?name=${name}`);
+        const res = await axios.get(`https://youtube-analytics-bcknd.onrender.com/channel`, {
+          params: { name },
+        });
+
         const videos = res.data.videos;
         const stats = res.data.channel.statistics;
 
-        const avgViews = videos.reduce((sum, vid) => sum + parseInt(vid.statistics.viewCount || 0), 0) / videos.length;
-        const avgEngagement = videos.reduce((sum, vid) => {
-          const likes = parseInt(vid.statistics.likeCount || 0);
-          const comments = parseInt(vid.statistics.commentCount || 0);
-          const views = parseInt(vid.statistics.viewCount || 0);
-          return sum + ((likes + comments) / (views || 1));
-        }, 0) / videos.length;
+        const avgViews =
+          videos.length > 0
+            ? videos.reduce((sum, vid) => sum + parseInt(vid.statistics.viewCount || 0), 0) /
+              videos.length
+            : 0;
+
+        const avgEngagement =
+          videos.length > 0
+            ? videos.reduce((sum, vid) => {
+                const likes = parseInt(vid.statistics.likeCount || 0);
+                const comments = parseInt(vid.statistics.commentCount || 0);
+                const views = parseInt(vid.statistics.viewCount || 0);
+                return sum + (likes + comments) / (views || 1);
+              }, 0) / videos.length
+            : 0;
 
         results.push({
           name: res.data.channel.snippet.title,
@@ -39,7 +55,6 @@ const CompetitorComparison = () => {
           avgViews: Math.round(avgViews),
           engagementRate: +(avgEngagement * 100).toFixed(2),
         });
-
       } catch (err) {
         console.error(`Error fetching data for ${name}`, err.message);
       }
@@ -50,8 +65,8 @@ const CompetitorComparison = () => {
   };
 
   const formatMillions = (num) => {
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+    if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + 'M';
+    if (num >= 1_000) return (num / 1_000).toFixed(1) + 'K';
     return num;
   };
 
@@ -64,11 +79,25 @@ const CompetitorComparison = () => {
         placeholder="e.g. MrBeast, Linus Tech Tips"
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        style={{ padding: '10px', width: '80%', marginRight: '10px' }}
+        style={{
+          padding: '10px',
+          width: '80%',
+          marginRight: '10px',
+          fontSize: '16px',
+          border: '1px solid #ccc',
+          borderRadius: '5px',
+        }}
       />
       <button
         onClick={fetchCompetitors}
-        style={{ padding: '10px 20px', backgroundColor: '#d40000', color: 'white', borderRadius: '5px' }}
+        style={{
+          padding: '10px 20px',
+          backgroundColor: '#d40000',
+          color: 'white',
+          borderRadius: '5px',
+          fontSize: '16px',
+          cursor: 'pointer',
+        }}
       >
         Compare
       </button>
@@ -77,15 +106,16 @@ const CompetitorComparison = () => {
 
       {data.length > 0 && (
         <div style={{ marginTop: '30px' }}>
+          <defs>
+            <linearGradient id="redGradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#ff4d4d" />
+              <stop offset="100%" stopColor="#990000" />
+            </linearGradient>
+          </defs>
+
           <h3>Subscribers</h3>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={data}>
-              <defs>
-                <linearGradient id="redGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#ff0000" stopOpacity={0.9} />
-                  <stop offset="100%" stopColor="#ff9999" stopOpacity={0.9} />
-                </linearGradient>
-              </defs>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" stroke="#000" />
               <YAxis stroke="#000" tickFormatter={formatMillions} />
@@ -111,7 +141,7 @@ const CompetitorComparison = () => {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" stroke="#000" />
               <YAxis stroke="#000" />
-              <Tooltip />
+              <Tooltip formatter={(value) => value + '%'} />
               <Bar dataKey="engagementRate" fill="url(#redGradient)" />
             </BarChart>
           </ResponsiveContainer>
